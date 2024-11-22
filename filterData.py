@@ -1,7 +1,7 @@
 import pandas as pd 
 
 # Đọc dữ liệu từ file CSV
-file_path = 'student-scores.csv' 
+file_path = 'data/student-scores.csv' 
 data = pd.read_csv(file_path)
 
 # Tạo cột 'full_name' bằng cách ghép cột 'first_name' và 'last_name'
@@ -23,4 +23,4 @@ filtered_data = data[selected_columns]
 print("Đã tạo file csv được lọc.")
 
 # Lưu dữ liệu mới (tùy chọn)
-filtered_data.to_csv('filtered_data.csv', index=False)
+filtered_data.to_csv('data/filtered_data.csv', index=False)
