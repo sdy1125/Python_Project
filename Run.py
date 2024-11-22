@@ -1,15 +1,13 @@
-import csv
+import pandas as pd
+from tabulate import tabulate
 
-# Đường dẫn đến file CSV
-file_path = 'data/data.csv'
+# Đọc dữ liệu từ file CSV
+file_path = "data/filtered_data.csv"  # Đổi đường dẫn này thành file CSV của bạn
+data = pd.read_csv(file_path)
 
-# Đọc dữ liệu từ file CSV và in ra
-with open(file_path, mode='r', encoding='utf-8') as file:
-    csv_reader = csv.reader(file)
-    # Đọc dòng tiêu đề (header)
-    header = next(csv_reader)
-    print(header)
+# Hiển thị dữ liệu dưới dạng bảng
+def display_data(df):
+    print(tabulate(df, headers='keys', tablefmt='grid', showindex=False))
 
-    # Đọc và in các dòng dữ liệu
-    for row in csv_reader:
-        print(row)
+# Gọi hàm để in dữ liệu
+display_data(data)
