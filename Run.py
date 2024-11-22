@@ -1,56 +1,80 @@
 import pandas as pd
-import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
+from tabulate import tabulate
 
-# Đường dẫn đến file CSV có sẵn
-file_path = "data/filtered_data.csv"  # Đổi thành đường dẫn đến file của bạn
+# Đọc dữ liệu từ file CSV
+file_path = "data/filtered_data.csv"  # Thay bằng đường dẫn tới file CSV của bạn
+data = pd.read_csv(file_path)
 
-# Hàm để tải và hiển thị dữ liệu từ file CSV
-def load_csv():
-    try:
-        df = pd.read_csv(file_path)
-        display_data(df)
-    except Exception as e:
-        messagebox.showerror("Error", f"Could not load file:\n{e}")
+# Số lượng dữ liệu trên mỗi trang
+rows_per_page = 50
 
-# Hàm để hiển thị dữ liệu trong bảng
-def display_data(df):
-    # Xóa dữ liệu cũ
-    for row in tree.get_children():
-        tree.delete(row)
+# Hàm hiển thị dữ liệu theo dạng bảng
+def display_table(data, page, rows_per_page):
+    total_pages = (len(data) - 1) // rows_per_page + 1
+    if page < 1 or page > total_pages:
+        print("Số trang không hợp lệ.")
+        return
 
-    # Đặt tiêu đề cột
-    tree["columns"] = list(df.columns)
-    tree["show"] = "headings"
+    start_index = (page - 1) * rows_per_page
+    end_index = min(start_index + rows_per_page, len(data))
+    page_data = data.iloc[start_index:end_index]
 
-    for col in df.columns:
-        tree.heading(col, text=col)
-        tree.column(col, width=120, anchor="center")
+    # Thêm số thứ tự vào bảng
+    page_data.insert(0, "STT", range(start_index + 1, end_index + 1))
 
-    # Thêm dữ liệu vào bảng
-    for index, row in df.iterrows():
-        tree.insert("", "end", values=list(row))
+    # Hiển thị bảng
+    print("=" * 80)
+    print(f"Hiển thị từ dòng {start_index + 1} đến {end_index} trên tổng {len(data)} dữ liệu".center(80))
+    print(f"Trang: {page}/{total_pages}".center(80))
+    print("=" * 80)
+    print(tabulate(page_data, headers="keys", tablefmt="grid", showindex=False))
+    print("=" * 80)
 
-# Tạo giao diện chính
-root = tk.Tk()
-root.title("Dữ liệu sinh viên")
-root.geometry("800x600")
+# Hàm điều khiển menu
+def paginate_data(data, rows_per_page):
+    current_page = 1
+    total_pages = (len(data) - 1) // rows_per_page + 1
 
-# Tạo bảng để hiển thị dữ liệu
-frame = tk.Frame(root)
-frame.pack(fill="both", expand=True)
+    while True:
+        display_table(data, current_page, rows_per_page)
+        print("\n* Các lệnh điều khiển *")
+        print("n: trang tiếp    p: trang trước")
+        print("f: đến trang đầu l: đến trang cuối")
+        print("s: đổi số lượng hiển thị mỗi trang")
+        print("q: thoát")
+        print("-" * 80)
+        
+        command = input("Nhập lệnh: ").strip().lower()
+        if command == 'n':
+            if current_page < total_pages:
+                current_page += 1
+            else:
+                print("Đây là trang cuối.")
+        elif command == 'p':
+            if current_page > 1:
+                current_page -= 1
+            else:
+                print("Đây là trang đầu.")
+        elif command == 'f':
+            current_page = 1
+        elif command == 'l':
+            current_page = total_pages
+        elif command == 's':
+            try:
+                new_rows_per_page = int(input("Nhập số dòng trên mỗi trang: "))
+                if new_rows_per_page > 0:
+                    rows_per_page = new_rows_per_page
+                    total_pages = (len(data) - 1) // rows_per_page + 1
+                    current_page = 1  # Quay về trang đầu
+                else:
+                    print("Số dòng phải lớn hơn 0.")
+            except ValueError:
+                print("Vui lòng nhập một số hợp lệ.")
+        elif command == 'q':
+            print("Thoát chương trình.")
+            break
+        else:
+            print("Lệnh không hợp lệ. Vui lòng thử lại.")
 
-tree = ttk.Treeview(frame)
-tree.pack(fill="both", expand=True, side="left")
-
-# Thanh cuộn
-scrollbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
-scrollbar.pack(side="right", fill="y")
-tree.configure(yscroll=scrollbar.set)
-
-# Tự động tải file khi chạy chương trình
-load_csv()
-
-# Khởi động giao diện
-root.mainloop()
+# Gọi hàm paginate_data để chạy chương trình
+paginate_data(data, rows_per_page)
