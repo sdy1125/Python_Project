@@ -1,15 +1,102 @@
-import csv
+import pandas as pd
+from tabulate import tabulate
 
-# Đường dẫn đến file CSV
-file_path = 'data/data.csv'
+# Đọc dữ liệu từ file CSV
+file_path = "data/filtered_data.csv"  # Thay bằng đường dẫn tới file CSV của bạn
+data = pd.read_csv(file_path)
 
-# Đọc dữ liệu từ file CSV và in ra
-with open(file_path, mode='r', encoding='utf-8') as file:
-    csv_reader = csv.reader(file)
-    # Đọc dòng tiêu đề (header)
-    header = next(csv_reader)
-    print(header)
+# Số lượng dữ liệu trên mỗi trang
+rows_per_page = 50
 
-    # Đọc và in các dòng dữ liệu
-    for row in csv_reader:
-        print(row)
+# Hàm hiển thị dữ liệu theo dạng bảng
+def display_table(data, page, rows_per_page):
+    total_pages = (len(data) - 1) // rows_per_page + 1
+    if page < 1 or page > total_pages:
+        print("Số trang không hợp lệ.")
+        return
+
+    start_index = (page - 1) * rows_per_page
+    end_index = min(start_index + rows_per_page, len(data))
+    page_data = data.iloc[start_index:end_index]
+
+    # Thêm số thứ tự vào bảng
+    page_data.insert(0, "STT", range(start_index + 1, end_index + 1))
+
+    # Hiển thị bảng
+    print("=" * 80)
+    print(f"Hiển thị từ dòng {start_index + 1} đến {end_index} trên tổng {len(data)} dữ liệu".center(80))
+    print(f"Trang: {page}/{total_pages}".center(80))
+    print("=" * 80)
+    print(tabulate(page_data, headers="keys", tablefmt="grid", showindex=False))
+    print("=" * 80)
+
+# Hàm điều khiển menu
+# Chỉnh sửa hàm paginate_data để thêm chức năng sắp xếp
+def paginate_data(data, rows_per_page):
+    current_page = 1
+    total_pages = (len(data) - 1) // rows_per_page + 1
+
+    while True:
+        display_table(data, current_page, rows_per_page)
+        print("\n* Các lệnh điều khiển *")
+        print("n: trang tiếp    p: trang trước")
+        print("f: đến trang đầu l: đến trang cuối")
+        print("s: đổi số lượng hiển thị mỗi trang")
+        print("so: sắp xếp dữ liệu theo cột")
+        print("q: thoát")
+        print("-" * 80)
+
+        command = input("Nhập lệnh: ").strip().lower()
+        if command == 'n':
+            if current_page < total_pages:
+                current_page += 1
+            else:
+                print("Đây là trang cuối.")
+        elif command == 'p':
+            if current_page > 1:
+                current_page -= a
+            else:
+                print("Đây là trang đầu.")
+        elif command == 'f':
+            current_page = 1
+        elif command == 'l':
+            current_page = total_pages
+        elif command == 's':
+            try:
+                new_rows_per_page = int(input("Nhập số dòng trên mỗi trang: "))
+                if new_rows_per_page > 0:
+                    rows_per_page = new_rows_per_page
+                    total_pages = (len(data) - 1) // rows_per_page + 1
+                    current_page = 1  # Quay về trang đầu
+                else:
+                    print("Số dòng phải lớn hơn 0.")
+            except ValueError:
+                print("Vui lòng nhập một số hợp lệ.")
+        elif command == 'so':
+            print("\nChọn cột để sắp xếp:")
+            print("1. Giờ học cuối tuần (weekly_self_study_hours)")
+            print("2. Điểm trung bình (average_score)")
+            column_choice = input("Nhập lựa chọn (1 hoặc 2): ").strip()
+            if column_choice == '1':
+                ascending_choice = input("Sắp xếp tăng dần? (y/n): ").strip().lower() == 'y'
+                data = data.sort_values(by='weekly_self_study_hours', ascending=ascending_choice)
+                current_page = 1  # Quay về trang đầu sau khi sắp xếp
+                total_pages = (len(data) - 1) // rows_per_page + 1
+            elif column_choice == '2':
+                ascending_choice = input("Sắp xếp tăng dần? (y/n): ").strip().lower() == 'y'
+                data = data.sort_values(by='average_score', ascending=ascending_choice)
+                current_page = 1  # Quay về trang đầu sau khi sắp xếp
+                total_pages = (len(data) - 1) // rows_per_page + 1
+            else:
+                print("Lựa chọn không hợp lệ.")
+        elif command == 'q':
+            print("Thoát chương trình.")
+            break
+        else:
+            print("Lệnh không hợp lệ. Vui lòng thử lại.")
+
+    
+
+# Gọi hàm paginate_data để chạy chương trình
+paginate_data(data, rows_per_page)
+
