@@ -79,9 +79,8 @@ def search_data(data):
     print("========TÌM KIẾM========")
     print("1. Theo tên đầy đủ (Full Name)")
     print("2. Theo giới tính")
-    print("3. Theo điểm môn học cụ thể")
-    print("4. Theo điểm tất cả các môn vượt ngưỡng")
-    print("5. Theo tham gia hoạt động ngoại khóa hoặc làm thêm")
+    print("3. Theo điểm tất cả các môn vượt ngưỡng")
+    print("4. Theo tham gia hoạt động ngoại khóa hoặc làm thêm")
     print("0. Quay lại menu chính")
     print("========================")
     
@@ -93,15 +92,10 @@ def search_data(data):
     elif choice == '2':  # Tìm theo giới tính
         gender = input("Nhập giới tính (male/female): ").strip()
         result = search_by_gender(data, gender)
-    elif choice == '3':  # Tìm theo điểm một môn học
-        subject = input("Nhập môn học (e.g., math_score): ").strip()
-        min_score = int(input("Nhập điểm tối thiểu: ").strip())
-        max_score = int(input("Nhập điểm tối đa: ").strip())
-        result = search_by_subject_score(data, subject, min_score, max_score)
-    elif choice == '4':  # Tìm học sinh có điểm tất cả các môn vượt ngưỡng
+    elif choice == '3':  # Tìm học sinh có điểm tất cả các môn vượt ngưỡng
         min_score = int(input("Nhập ngưỡng điểm tối thiểu: ").strip())
         result = search_by_all_subjects_score(data, min_score)
-    elif choice == '5':  # Tìm học sinh tham gia ngoại khóa hoặc làm thêm
+    elif choice == '4':  # Tìm học sinh tham gia ngoại khóa hoặc làm thêm
         extracurricular = input("Tham gia hoạt động ngoại khóa? (y/n): ").strip().lower() == 'y'
         part_time = input("Làm thêm? (y/n): ").strip().lower() == 'y'
         result = search_by_activities_or_job(data, extracurricular, part_time)
@@ -117,6 +111,7 @@ def search_data(data):
         print(tabulate(result, headers="keys", tablefmt="grid", showindex=False))
     else:
         print("Không tìm thấy kết quả nào.")
+
 
 # Chức năng 4: Thêm dữ liệu
 # def add_data(data):
