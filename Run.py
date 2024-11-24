@@ -76,7 +76,8 @@ def paginate_data(data, rows_per_page):
 # Chức năng 2: Sắp xếp dữ liệu
 def sort_data(data, original_data):
     """
-    Thực hiện sắp xếp dữ liệu theo các tiêu chí và cho phép hoàn tác.
+    Thực hiện sắp xếp dữ liệu theo các tiêu chí, hiển thị kết quả ngay sau khi sắp xếp
+    và cho phép phân trang (tái sử dụng phân trang).
     """
     while True:
         print("\n======== MENU SẮP XẾP ========")
@@ -103,19 +104,24 @@ def sort_data(data, original_data):
             print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
             continue  # Quay lại menu sắp xếp
 
-        while True:
-            ascending_choice = input("\nSắp xếp tăng dần? (y/n, nhập 'q' để quay lại): ").strip().lower()
-            if ascending_choice == 'q':
-                print("Quay lại menu sắp xếp.")
-                break  # Quay lại menu sắp xếp chính
+        # Hỏi người dùng sắp xếp tăng dần hay giảm dần
+        ascending_choice = input("\nSắp xếp tăng dần? (y/n): ").strip().lower()
+        if ascending_choice not in ['y', 'n']:
+            print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
+            continue  # Quay lại menu sắp xếp
 
-            if ascending_choice in ['y', 'n']:
-                ascending = ascending_choice == 'y'
-                sorted_data = data.sort_values(by=column_name, ascending=ascending)
-                print(f"\nDữ liệu đã được sắp xếp theo cột '{column_name}' ({'tăng dần' if ascending else 'giảm dần'}).")
-                return sorted_data  # Cập nhật dữ liệu đã sắp xếp
-            else:
-                print("Lựa chọn không hợp lệ. Vui lòng nhập 'y', 'n', hoặc 'q'.")
+        ascending = ascending_choice == 'y'
+
+        # Sắp xếp dữ liệu
+        sorted_data = data.sort_values(by=column_name, ascending=ascending)
+        print(f"\nDữ liệu đã được sắp xếp theo cột '{column_name}' ({'tăng dần' if ascending else 'giảm dần'}).")
+
+        # Tái sử dụng phân trang để hiển thị dữ liệu đã sắp xếp
+        paginate_data(sorted_data, rows_per_page)
+
+        # Sau khi phân trang xong, quay lại menu sắp xếp
+        print("\nQuay lại menu sắp xếp...")
+
 
 
 # Chức năng 3: Tìm kiếm dữ liệu
