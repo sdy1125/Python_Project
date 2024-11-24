@@ -1,3 +1,4 @@
+from networkx import add_path
 import pandas as pd
 from tabulate import tabulate
 import matplotlib.pyplot as plt
@@ -111,6 +112,32 @@ def search_data(data):
         print(tabulate(result, headers="keys", tablefmt="grid", showindex=False))
     else:
         print("Không tìm thấy kết quả nào.")
+def search_by_gender(data, gender):
+    if gender.lower() not in ['male', 'female']:
+        print("Giới tính không hợp lệ. Vui lòng nhập 'male' hoặc 'female'.")
+        return pd.DataFrame()  # Trả về DataFrame rỗng nếu giới tính không hợp lệ
+    result = data[data['gender'].str.lower() == gender.lower()]
+    return result
+def search_by_full_name(data, full_name):
+    result = data[data['first_name'].str.contains(full_name, case=False, na=False) |
+                  data['last_name'].str.contains(full_name, case=False, na=False)]
+    return result
+def search_by_all_subjects_score(data, min_score):
+    subjects = ['math_score', 'history_score', 'physics_score', 
+                'chemistry_score', 'biology_score', 'english_score', 'geography_score']
+    result = data[(data[subjects] >= min_score).all(axis=1)]
+    return result
+def search_by_activities_or_job(data, extracurricular=False, part_time=False):
+    if extracurricular and part_time:
+        result = data[(data['extracurricular_activities'] == True) | (data['part_time_job'] == True)]
+    elif extracurricular:
+        result = data[data['extracurricular_activities'] == True]
+    elif part_time:
+        result = data[data['part_time_job'] == True]
+    else:
+        result = data
+    return result
+
 
 
 # Chức năng 4: Thêm dữ liệu
@@ -126,6 +153,55 @@ def search_data(data):
 
 # Chức năng 7: Hiển thị biểu đồ
 # def plot_data(data):
+def plot_data(data):
+    while True:
+        print("\n======== BIỂU ĐỒ ========")
+        print("1. Số lượng học sinh theo giới tính")
+        print("2. Điểm trung bình của các môn học")
+        print("0. Quay lại menu chính")
+        print("=========================")
+        
+        choice = input("Chọn biểu đồ bạn muốn vẽ: ").strip()
+        
+        if choice == '1':  # Biểu đồ số lượng học sinh theo giới tính
+            gender_counts = data['gender'].value_counts()
+            gender_counts.plot(kind='bar', color=['blue', 'pink'], alpha=0.7, edgecolor='black')
+            plt.title('Số lượng học sinh theo giới tính')
+            plt.xlabel('Giới tính')
+            plt.ylabel('Số lượng')
+            plt.xticks(rotation=0)
+            plt.show()
+        
+        elif choice == '2':  # Biểu đồ điểm trung bình các môn học
+            # Danh sách các cột môn học
+            all_subjects = [
+                'math_score', 'history_score', 'physics_score', 
+                'chemistry_score', 'biology_score', 'english_score', 'geography_score'
+            ]
+            
+            # Kiểm tra xem cột nào tồn tại trong dữ liệu
+            available_subjects = [subject for subject in all_subjects if subject in data.columns]
+            if not available_subjects:
+                print("Không có cột môn học hợp lệ trong dữ liệu.")
+                continue
+            
+            # Tính điểm trung bình các môn học có trong dữ liệu
+            average_scores = data[available_subjects].mean()
+            average_scores.plot(kind='bar', color='green', alpha=0.7, edgecolor='black')
+            plt.title('Điểm trung bình của các môn học')
+            plt.xlabel('Môn học')
+            plt.ylabel('Điểm trung bình')
+            plt.xticks(rotation=45)
+            plt.tight_layout()
+            plt.show()
+        
+        elif choice == '0':  # Thoát menu
+            print("Quay lại menu chính.")
+            break
+        
+        else:
+            print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
+
 
 def main():
     global data
@@ -150,7 +226,7 @@ def main():
         elif choice == '3':
             search_data(data)
         elif choice == '4':
-            data = add_data(data)
+            data = add_path(data)
         elif choice == '5':
             data = update_data(data)
         elif choice == '6':
