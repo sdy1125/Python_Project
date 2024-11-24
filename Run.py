@@ -1,27 +1,23 @@
 import pandas as pd
+from tkinter import *
+from tkinter import ttk
 from tabulate import tabulate
-
 # Đọc dữ liệu từ file CSV
-file_path = "data/filtered_data.csv"  # Thay bằng đường dẫn tới file CSV của bạn
+file_path = "data/filtered_data.csv"
 data = pd.read_csv(file_path)
-
 # Số lượng dữ liệu trên mỗi trang
 rows_per_page = 50
-
 # Hàm hiển thị dữ liệu theo dạng bảng
 def display_table(data, page, rows_per_page):
     total_pages = (len(data) - 1) // rows_per_page + 1
     if page < 1 or page > total_pages:
         print("Số trang không hợp lệ.")
         return
-
     start_index = (page - 1) * rows_per_page
     end_index = min(start_index + rows_per_page, len(data))
     page_data = data.iloc[start_index:end_index]
-
     # Thêm số thứ tự vào bảng
     page_data.insert(0, "STT", range(start_index + 1, end_index + 1))
-
     # Hiển thị bảng
     print("=" * 80)
     print(f"Hiển thị từ dòng {start_index + 1} đến {end_index} trên tổng {len(data)} dữ liệu".center(80))
@@ -29,12 +25,10 @@ def display_table(data, page, rows_per_page):
     print("=" * 80)
     print(tabulate(page_data, headers="keys", tablefmt="grid", showindex=False))
     print("=" * 80)
-
 # Hàm điều khiển menu
 def paginate_data(data, rows_per_page):
     current_page = 1
     total_pages = (len(data) - 1) // rows_per_page + 1
-
     while True:
         display_table(data, current_page, rows_per_page)
         print("\n* Các lệnh điều khiển *")
@@ -43,7 +37,6 @@ def paginate_data(data, rows_per_page):
         print("s: đổi số lượng hiển thị mỗi trang")
         print("q: thoát")
         print("-" * 80)
-        
         command = input("Nhập lệnh: ").strip().lower()
         if command == 'n':
             if current_page < total_pages:
@@ -75,6 +68,4 @@ def paginate_data(data, rows_per_page):
             break
         else:
             print("Lệnh không hợp lệ. Vui lòng thử lại.")
-
-# Gọi hàm paginate_data để chạy chương trình
 paginate_data(data, rows_per_page)
