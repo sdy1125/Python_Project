@@ -1,15 +1,5 @@
-import csv
+from uptest.updata_records import menu_update
 
-# Đường dẫn đến file CSV
-file_path = 'data/data.csv'
-
-# Đọc dữ liệu từ file CSV và in ra
-with open(file_path, mode='r', encoding='utf-8') as file:
-    csv_reader = csv.reader(file)
-    # Đọc dòng tiêu đề (header)
-    header = next(csv_reader)
-    print(header)
-
-    # Đọc và in các dòng dữ liệu
-    for row in csv_reader:
-        print(row)
+# Đường dẫn file CSV
+file_path = 'data/filtered_data.csv' 
+menu_update(file_path)
