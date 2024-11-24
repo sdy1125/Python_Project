@@ -153,54 +153,6 @@ def search_by_activities_or_job(data, extracurricular=False, part_time=False):
 
 # Chức năng 7: Hiển thị biểu đồ
 # def plot_data(data):
-def plot_data(data):
-    while True:
-        print("\n======== BIỂU ĐỒ ========")
-        print("1. Số lượng học sinh theo giới tính")
-        print("2. Điểm trung bình của các môn học")
-        print("0. Quay lại menu chính")
-        print("=========================")
-        
-        choice = input("Chọn biểu đồ bạn muốn vẽ: ").strip()
-        
-        if choice == '1':  # Biểu đồ số lượng học sinh theo giới tính
-            gender_counts = data['gender'].value_counts()
-            gender_counts.plot(kind='bar', color=['blue', 'pink'], alpha=0.7, edgecolor='black')
-            plt.title('Số lượng học sinh theo giới tính')
-            plt.xlabel('Giới tính')
-            plt.ylabel('Số lượng')
-            plt.xticks(rotation=0)
-            plt.show()
-        
-        elif choice == '2':  # Biểu đồ điểm trung bình các môn học
-            # Danh sách các cột môn học
-            all_subjects = [
-                'math_score', 'history_score', 'physics_score', 
-                'chemistry_score', 'biology_score', 'english_score', 'geography_score'
-            ]
-            
-            # Kiểm tra xem cột nào tồn tại trong dữ liệu
-            available_subjects = [subject for subject in all_subjects if subject in data.columns]
-            if not available_subjects:
-                print("Không có cột môn học hợp lệ trong dữ liệu.")
-                continue
-            
-            # Tính điểm trung bình các môn học có trong dữ liệu
-            average_scores = data[available_subjects].mean()
-            average_scores.plot(kind='bar', color='green', alpha=0.7, edgecolor='black')
-            plt.title('Điểm trung bình của các môn học')
-            plt.xlabel('Môn học')
-            plt.ylabel('Điểm trung bình')
-            plt.xticks(rotation=45)
-            plt.tight_layout()
-            plt.show()
-        
-        elif choice == '0':  # Thoát menu
-            print("Quay lại menu chính.")
-            break
-        
-        else:
-            print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
 
 
 def main():
