@@ -1,0 +1,2 @@
+số dữ liệu trang khi q thì bị reset
+note nhỏ: tìm kiếm, khi in ra bi quay về menu ( gợi ý dùng chức năng ở display\table_display.py)
