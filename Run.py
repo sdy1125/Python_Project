@@ -71,17 +71,8 @@ def paginate_data(data, rows_per_page):
             print("Lệnh không hợp lệ. Vui lòng thử lại.")
 
 # Chức năng 2: Sắp xếp dữ liệu
-def sort_data(data):
-    column = input("Nhập tên cột muốn sắp xếp: ").strip()
-    order = input("Sắp xếp tăng (asc) hay giảm (desc): ").strip().lower()
-    if column in data.columns:
-        ascending = True if order == 'asc' else False
-        sorted_data = data.sort_values(by=column, ascending=ascending)
-        print("Dữ liệu sau khi sắp xếp:")
-        paginate_data(sorted_data, rows_per_page)
-    else:
-        print("Cột không hợp lệ.")
-
+# def sort_data(data):
+    
 # Chức năng 3: Tìm kiếm dữ liệu
 # def search_data(data):
 
