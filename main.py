@@ -34,6 +34,7 @@ def main():
           data = update_data_by_id(data, file_path)
         elif choice == '5':
             data = menu_add_and_delete(file_path)
+            data = pd.read_csv(file_path)
         elif choice == '6':
             plot_data(data)
         elif choice == '0':
