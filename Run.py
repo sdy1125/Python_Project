@@ -2,19 +2,6 @@ import pandas as pd
 from tabulate import tabulate
 import matplotlib.pyplot as plt
 
-# Đường dẫn đến file CSV
-file_path = 'data/data.csv'
-
-# Đọc dữ liệu từ file CSV và in ra
-with open(file_path, mode='r', encoding='utf-8') as file:
-    csv_reader = csv.reader(file)
-    # Đọc dòng tiêu đề (header)
-    header = next(csv_reader)
-    print(header)
-
-    # Đọc và in các dòng dữ liệu
-    for row in csv_reader:
-        print(row)
 # Đọc dữ liệu từ file CSV
 file_path = "data/filtered_data.csv"
 data = pd.read_csv(file_path)
@@ -90,7 +77,7 @@ def paginate_data(data, rows_per_page):
 # def search_data(data):
 def search_data(data):
     print("========TÌM KIẾM========")
-    print("1. Theo tên (họ, tên, hoặc cả hai)")
+    print("1. Theo tên đầy đủ (Full Name)")
     print("2. Theo giới tính")
     print("3. Theo điểm môn học cụ thể")
     print("4. Theo điểm tất cả các môn vượt ngưỡng")
@@ -100,10 +87,9 @@ def search_data(data):
     
     choice = input("Chọn tiêu chí tìm kiếm: ").strip()
     
-    if choice == '1':  # Tìm theo tên
-        first_name = input("Nhập tên: ").strip()
-        last_name = input("Nhập họ: ").strip()
-        result = search_by_name(data, first_name, last_name)
+    if choice == '1':  # Tìm theo tên đầy đủ
+        full_name = input("Nhập tên đầy đủ (hoặc một phần): ").strip()
+        result = search_by_full_name(data, full_name)
     elif choice == '2':  # Tìm theo giới tính
         gender = input("Nhập giới tính (male/female): ").strip()
         result = search_by_gender(data, gender)
