@@ -13,7 +13,7 @@ data['Score Range'] = pd.cut(data['average_score'], bins=bins, labels=labels, ri
 # Đếm số lượng học sinh trong mỗi phần
 score_distribution = data['Score Range'].value_counts(sort=False)
 
-# Vẽ biểu đồ cột (bar chart) với màu hồng phấn
+# Vẽ biểu đồ cột (bar chart) 
 plt.figure(figsize=(8, 6))
 plt.bar(score_distribution.index.astype(str), score_distribution.values, color='skyblue', edgecolor='purple')
 
