@@ -46,7 +46,7 @@ def add_new_data(file_path):
                     else:
                         print("Bạn phải nhập tương ứng trong đoạn [0-100]. Vui lòng nhập lại.")
                 except ValueError:
-                    print("Vui lòng nhập một số nguyên hợp lệ.")
+                    print("Vui lòng nhập một số hợp lệ.")
 
         weekly_self_study_hours = safe_input("Nhập số giờ tự học hàng tuần (số nguyên): ")
         math_score = safe_input("Nhập điểm Toán (0-100): ")
@@ -141,15 +141,15 @@ def menu_update(file_path):
         print("\n==== MENU ====")
         print("1. Thêm đối tượng mới")
         print("2. Xóa đối tượng theo ID")
-        print("3. Thoát")
+        print("0. Thoát")
         
-        choice = input("Chọn thao tác (1-3): ")
+        choice = input("Chọn thao tác (1-2-0): ")
         if choice == '1':
             add_new_data(file_path)
         elif choice == '2':
             delete_data_by_id(file_path)
-        elif choice == '3':
-            print("Thoát chương trình.")
+        elif choice == '0':
+            print("Thoát chức năng.")
             break
         else:
             print("Lựa chọn không hợp lệ. Vui lòng chọn lại.")
