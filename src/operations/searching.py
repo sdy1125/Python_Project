@@ -18,13 +18,14 @@ def search_data(data, root):
             elif search_type == "Score Threshold":
                 threshold = float(keyword)
                 result = search_by_all_subjects_score(data, threshold)
-            elif search_type == "Extracurricular/Job":
-                extracurricular = keyword.lower() == 'y'
-                part_time = keyword.lower() == 'y'
-                result = search_by_activities_or_job(data, extracurricular, part_time)
-            else:
-                messagebox.showwarning("Cảnh báo", "Chọn tiêu chí tìm kiếm hợp lệ.")
+            if search_type == "Extracurricular/Job":
+               if keyword.lower() in ['true', 'false']:
+                 part_time = keyword.lower() == 'true'
+                 result = search_by_activities_or_job(data, part_time)
+               else:
+                messagebox.showwarning("Cảnh báo", "Vui lòng nhập 'True' hoặc 'False' cho tiêu chí này.")
                 return
+
 
             # Hiển thị kết quả tìm kiếm
             for row in tree.get_children():
@@ -77,12 +78,8 @@ def search_by_id(data, id_value):
         return pd.DataFrame()
     return data[data['id'].astype(str).str.lower() == id_value.lower()]
 
-def search_by_full_name(data, full_name):
-    if 'first_name' not in data.columns or 'last_name' not in data.columns:
-        messagebox.showerror("Lỗi", "Dữ liệu không chứa cột 'first_name' hoặc 'last_name'.")
-        return pd.DataFrame()
-    return data[data['first_name'].str.contains(full_name, case=False, na=False) |
-                data['last_name'].str.contains(full_name, case=False, na=False)]
+def search_by_full_name(data, full_name_input):
+    return data[data['full_name'].str.contains(full_name_input, case=False, na=False)]
 
 def search_by_all_subjects_score(data, min_score):
     subjects = ['math_score', 'history_score', 'physics_score', 
@@ -93,15 +90,9 @@ def search_by_all_subjects_score(data, min_score):
         return pd.DataFrame()
     return data[(data[subjects] >= min_score).all(axis=1)]
 
-def search_by_activities_or_job(data, extracurricular=False, part_time=False):
-    if 'extracurricular_activities' not in data.columns or 'part_time_job' not in data.columns:
+def search_by_activities_or_job(data,part_time=False):
+    if 'part_time_job' not in data.columns:
         messagebox.showerror("Lỗi", "Dữ liệu không chứa thông tin về hoạt động ngoại khóa hoặc làm thêm.")
         return pd.DataFrame()
-    if extracurricular and part_time:
-        return data[(data['extracurricular_activities'] == True) | (data['part_time_job'] == True)]
-    elif extracurricular:
-        return data[data['extracurricular_activities'] == True]
-    elif part_time:
-        return data[data['part_time_job'] == True]
-    else:
-        return pd.DataFrame()
+    # Tìm kiếm các hàng khớp với giá trị part_time
+    return data[data['part_time_job'] == part_time]
