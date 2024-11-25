@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 
 # Đọc dữ liệu từ file CSV
 file_path = "data/filtered_data.csv"
+scores_file_path = "data/student-scores.csv"
 data = pd.read_csv(file_path)
+
 
 # Số lượng dữ liệu trên mỗi trang
 rows_per_page = 50
@@ -153,6 +155,66 @@ def search_by_activities_or_job(data, extracurricular=False, part_time=False):
 
 # Chức năng 7: Hiển thị biểu đồ
 # def plot_data(data):
+def plot_data():
+    try:
+        # Chỉ đọc dữ liệu từ file khi chọn chức năng số 7
+        scores_data = pd.read_csv(scores_file_path)
+        print(f"Dữ liệu đã được tải từ {scores_file_path}")
+    except FileNotFoundError:
+        print(f"Lỗi: Không tìm thấy file {scores_file_path}.")
+        return
+
+    while True:
+        print("\n======== BIỂU ĐỒ ========")
+        print("1. Số lượng học sinh theo giới tính")
+        print("2. Điểm trung bình của các môn học")
+        print("0. Quay lại menu chính")
+        print("=========================")
+        
+        choice = input("Chọn biểu đồ bạn muốn vẽ: ").strip()
+        
+        if choice == '1':  # Biểu đồ số lượng học sinh theo giới tính
+            if 'gender' not in scores_data.columns:
+                print("Dữ liệu không chứa thông tin về giới tính.")
+                continue
+            
+            gender_counts = scores_data['gender'].str.lower().value_counts()
+            gender_counts.plot(kind='bar', color=['#1f77b4', '#ff7f0e'], alpha=0.8, edgecolor='black')
+            plt.title('Số lượng học sinh theo giới tính', fontsize=14)
+            plt.xlabel('Giới tính', fontsize=12)
+            plt.ylabel('Số lượng', fontsize=12)
+            plt.xticks(rotation=0, fontsize=10)
+            plt.grid(axis='y', linestyle='--', alpha=0.7)
+            plt.tight_layout()
+            plt.show()
+        
+        elif choice == '2':  # Biểu đồ điểm trung bình các môn học
+            all_subjects = [
+                'math_score', 'history_score', 'physics_score', 
+                'chemistry_score', 'biology_score', 'english_score', 'geography_score'
+            ]
+            
+            available_subjects = [subject for subject in all_subjects if subject in scores_data.columns]
+            if not available_subjects:
+                print("Không có cột môn học hợp lệ trong dữ liệu.")
+                continue
+            
+            average_scores = scores_data[available_subjects].mean()
+            average_scores.plot(kind='bar', color='#76c7c0', alpha=0.8, edgecolor='black')
+            plt.title('Điểm trung bình của các môn học', fontsize=14)
+            plt.xlabel('Môn học', fontsize=12)
+            plt.ylabel('Điểm trung bình', fontsize=12)
+            plt.xticks(rotation=45, fontsize=10)
+            plt.grid(axis='y', linestyle='--', alpha=0.7)
+            plt.tight_layout()
+            plt.show()
+        
+        elif choice == '0':  # Thoát menu
+            print("Quay lại menu chính.")
+            break
+        
+        else:
+            print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
 
 
 def main():
@@ -184,7 +246,7 @@ def main():
         elif choice == '6':
             data = delete_data(data)
         elif choice == '7':
-            plot_data(data)
+            plot_data()
         elif choice == '0':
             print("Thoát chương trình.")
             break
