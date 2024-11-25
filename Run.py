@@ -8,7 +8,6 @@ file_path = "data/filtered_data.csv"
 scores_file_path = "data/student-scores.csv"
 data = pd.read_csv(file_path)
 
-
 # Số lượng dữ liệu trên mỗi trang
 rows_per_page = 50
 
@@ -121,8 +120,18 @@ def search_by_gender(data, gender):
     result = data[data['gender'].str.lower() == gender.lower()]
     return result
 def search_by_full_name(data, full_name):
-    result = data[data['first_name'].str.contains(full_name, case=False, na=False) |
-                  data['last_name'].str.contains(full_name, case=False, na=False)]
+    # Chuẩn hóa dữ liệu: Loại bỏ khoảng trắng thừa, viết hoa đầu từ
+    data['first_name'] = data['first_name'].str.strip()
+    data['last_name'] = data['last_name'].str.strip()
+
+    # Tạo cột 'full_name' tạm thời
+    data['full_name'] = data['first_name'] + ' ' + data['last_name']
+
+    # Tìm kiếm trong cột 'full_name'
+    result = data[data['full_name'].str.contains(full_name, case=False, na=False)]
+
+    # Xóa cột tạm thời để giữ nguyên dữ liệu gốc
+    data.drop(columns=['full_name'], inplace=True)
     return result
 def search_by_all_subjects_score(data, min_score):
     subjects = ['math_score', 'history_score', 'physics_score', 
