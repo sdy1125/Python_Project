@@ -46,7 +46,7 @@ def menu_search_data():
 # Giao diện chính
 root = tk.Tk()
 root.title("Hệ thống quản lý dữ liệu")
-root.geometry("600x400")
+root.geometry("400x250")
 
 tk.Button(root, text="Hiển thị danh sách dữ liệu", command=display_data_tk).pack(pady=10)
 tk.Button(root, text="Sắp xếp dữ liệu", command=menu_sort_data).pack(pady=10)
