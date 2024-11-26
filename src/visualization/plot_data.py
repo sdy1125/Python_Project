@@ -27,36 +27,42 @@ def show_chart1(data):
     plt.tight_layout()
     plt.show()
 def show_chart2(data):        
-    gender_counts = data['gender'].str.lower().value_counts()
-    gender_counts.plot(kind='bar', color=['#1f77b4', '#ff7f0e'], alpha=0.8, edgecolor='black')
-    plt.title('Số lượng học sinh theo giới tính', fontsize=14)
-    plt.xlabel('Giới tính', fontsize=12)
-    plt.ylabel('Số lượng', fontsize=12)
-    plt.xticks(rotation=0, fontsize=10)
-    plt.grid(axis='y', linestyle='--', alpha=0.7)
-    plt.tight_layout()
+    all_subjects = ['math_score', 'history_score', 'physics_score', 
+                    'chemistry_score', 'biology_score', 'english_score', 'geography_score']
+
+    df_above_80 = data[data[all_subjects].gt(80).any(axis=1)] 
+    part_time_count = df_above_80[df_above_80['part_time_job'] == 1].shape[0] 
+    no_part_time_count = df_above_80[df_above_80['part_time_job'] == 0].shape[0] 
+    categories = ['Có làm thêm', 'Không làm thêm']
+    counts = [part_time_count, no_part_time_count]
+    plt.figure(figsize=(8, 8))
+    plt.pie(counts, labels=categories, autopct='%1.1f%%', startangle=140, colors=['green', 'blue'])
+    plt.title('Số lượng sinh viên có điểm trên 80 và có/không có việc làm thêm')
     plt.show()
+
 def show_chart3(data):  
     all_subjects = ['math_score', 'history_score', 'physics_score', 
                     'chemistry_score', 'biology_score', 'english_score', 'geography_score']
-            
-    available_subjects = [subject for subject in all_subjects if subject in data.columns]
-    average_scores = data[available_subjects].mean()
-    average_scores.plot(kind='bar', color='#76c7c0', alpha=0.8, edgecolor='black')
-    plt.title('Điểm trung bình của các môn học', fontsize=14)
-    plt.xlabel('Môn học', fontsize=12)
-    plt.ylabel('Điểm trung bình', fontsize=12)
-    plt.xticks(rotation=45, fontsize=10)
-    plt.grid(axis='y', linestyle='--', alpha=0.7)
-    plt.tight_layout()
+    students_above_80 = []
+    for subject in all_subjects:
+        count_above_80 = (data[subject] > 80).sum()
+        students_above_80.append(count_above_80)
+    
+    # Plot the pie chart
+    plt.figure(figsize=(8, 8))
+    plt.pie(students_above_80, labels=all_subjects, autopct='%1.1f%%', startangle=140)
+    plt.title('Số lượng học sinh có điểm trên 80 của từng môn học')
     plt.show()
 
 # Giao diện chính
 def menu_display_plot_data(data):
     root = tk.Tk()
-    root.title("Thêm/Xóa dữ liệu")
-    tk.Button(root, text="Phân bố điểm trung bình của học sinh", command=lambda: show_chart1(data)).pack(pady=10)
-    tk.Button(root, text="Số lượng học sinh theo giới tính", command=lambda: show_chart2(data)).pack(pady=10)
-    tk.Button(root, text="Điểm trung bình của các môn học", command=lambda: show_chart3(data)).pack(pady=10)
+    root.title("Đồ thị trực quan")
+    root.geometry("300x200")
+    root.config(bg='black')
+    
+    tk.Button(root, text="Phân bố điểm trung bình của học sinh", command=lambda: show_chart1(data), width=34).pack(pady=10)
+    tk.Button(root, text="Biểu đồ phân bố điểm dựa trên việc làm thêm", command=lambda: show_chart2(data), width=34).pack(pady=10)
+    tk.Button(root, text="Phân bố số lượng học sinh có điểm trên 80", command=lambda: show_chart3(data), width=34).pack(pady=10)
     tk.Button(root, text="Thoát", command=root.destroy).pack(pady=10)
     root.mainloop()
