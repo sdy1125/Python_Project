@@ -35,7 +35,7 @@ def sort_data(data, rows_per_page, root):
     sort_window = Toplevel(root)
     sort_window.title("Sắp xếp dữ liệu")
     sort_window.geometry("400x300")
-
+    
     # Biến lưu trữ lựa chọn cột và thứ tự sắp xếp
     column_var = StringVar(value="Weekly Study Hours")
     sort_order_var = StringVar(value="Ascending")

@@ -55,8 +55,11 @@ def show_chart3(data):
 def menu_display_plot_data(data):
     root = tk.Tk()
     root.title("Thêm/Xóa dữ liệu")
-    tk.Button(root, text="Phân bố điểm trung bình của học sinh", command=lambda: show_chart1(data)).pack(pady=10)
-    tk.Button(root, text="Số lượng học sinh theo giới tính", command=lambda: show_chart2(data)).pack(pady=10)
-    tk.Button(root, text="Điểm trung bình của các môn học", command=lambda: show_chart3(data)).pack(pady=10)
+    root.geometry("300x200")
+    root.config(bg='black')
+    
+    tk.Button(root, text="Phân bố điểm trung bình của học sinh", command=lambda: show_chart1(data), width=30).pack(pady=10)
+    tk.Button(root, text="Số lượng học sinh theo giới tính", command=lambda: show_chart2(data), width=30).pack(pady=10)
+    tk.Button(root, text="Điểm trung bình của các môn học", command=lambda: show_chart3(data), width=30).pack(pady=10)
     tk.Button(root, text="Thoát", command=root.destroy).pack(pady=10)
     root.mainloop()

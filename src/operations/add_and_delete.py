@@ -90,6 +90,7 @@ def add_new_data(file_path):
                 writer.writeheader() # Ghi header nếu file chưa có dữ liệu
             writer.writerow(new_record) # Ghi dòng dữ liệu mới
         messagebox.showinfo("Thành công", "Đã thêm đối tượng mới vào file CSV.")
+        display_data_update(file_path)
     except Exception as e:
         messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
 
@@ -121,6 +122,7 @@ def delete_data_by_id_gui(file_path):
                     data = data[~data['id'].isin(id_to_delete)]
                     data.to_csv(file_path, index=False, encoding='utf-8')
                     messagebox.showinfo("Thành công", f"Đã xóa ID: {id_to_delete}.")
+                    display_data_update(file_path)
                     break  # Thoát vòng lặp khi hoàn tất
                 else:
                     messagebox.showerror("Lỗi", "Một hoặc nhiều ID không tồn tại trong file. Vui lòng nhập lại.")
@@ -128,15 +130,19 @@ def delete_data_by_id_gui(file_path):
                 messagebox.showerror("Lỗi", "Định dạng ID không hợp lệ. Vui lòng nhập lại.")
     except Exception as e:
         messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
+
 def display_data_update(file_path):
    data = pd.read_csv(file_path)
    create_table_window(data, rows_per_page=50)
+
 # Giao diện chính
 def menu_update(file_path):
     root = tk.Tk()
     root.title("Thêm/Xóa dữ liệu")
-    tk.Button(root, text="Hiển thị danh sách", command=lambda: display_data_update(file_path) ).pack(pady=10)
-    tk.Button(root, text="Thêm đối tượng mới", command=lambda: add_new_data(file_path)).pack(pady=10)
-    tk.Button(root, text="Xóa đối tượng theo ID", command=lambda: delete_data_by_id_gui(file_path)).pack(pady=10)
+    root.geometry("300x150")
+    root.config(bg='black')
+
+    tk.Button(root, text="Thêm đối tượng mới", command=lambda: add_new_data(file_path), width=20).pack(pady=10)
+    tk.Button(root, text="Xóa đối tượng theo ID", command=lambda: delete_data_by_id_gui(file_path), width=20).pack(pady=10)
     tk.Button(root, text="Thoát", command=root.destroy).pack(pady=10)
     root.mainloop()
