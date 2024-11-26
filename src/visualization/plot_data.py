@@ -29,7 +29,6 @@ def show_chart1(data):
 def show_chart2(data):        
     all_subjects = ['math_score', 'history_score', 'physics_score', 
                     'chemistry_score', 'biology_score', 'english_score', 'geography_score']
-
     df_above_80 = data[data[all_subjects].gt(80).any(axis=1)] 
     part_time_count = df_above_80[df_above_80['part_time_job'] == 1].shape[0] 
     no_part_time_count = df_above_80[df_above_80['part_time_job'] == 0].shape[0] 
@@ -40,17 +39,32 @@ def show_chart2(data):
     plt.title('Số lượng sinh viên có điểm trên 80 và có/không có việc làm thêm')
     plt.show()
 
-def show_chart3(data):  
+import matplotlib.pyplot as plt
+
+def show_chart3(data):
     all_subjects = ['math_score', 'history_score', 'physics_score', 
                     'chemistry_score', 'biology_score', 'english_score', 'geography_score']
+    column_headers_vietnamese = {
+        "math_score": "Điểm Toán",
+        "history_score": "Điểm Lịch sử",
+        "physics_score": "Điểm Vật lý",
+        "chemistry_score": "Điểm Hóa học",
+        "biology_score": "Điểm Sinh học",
+        "english_score": "Điểm Tiếng Anh",
+        "geography_score": "Điểm Địa lý"
+    }
+
+    # Danh sách số lượng học sinh có điểm trên 80 của từng môn học
     students_above_80 = []
+    labels_vietnamese = []  # Danh sách nhãn tiếng Việt cho biểu đồ
     for subject in all_subjects:
-        count_above_80 = (data[subject] > 80).sum()
+        count_above_80 = (data[subject] > 80).sum()  # Tính số lượng học sinh điểm trên 80
         students_above_80.append(count_above_80)
+        labels_vietnamese.append(column_headers_vietnamese[subject])  # Thêm nhãn tiếng Việt
     
-    # Plot the pie chart
+    # Vẽ biểu đồ hình tròn
     plt.figure(figsize=(8, 8))
-    plt.pie(students_above_80, labels=all_subjects, autopct='%1.1f%%', startangle=140)
+    plt.pie(students_above_80, labels=labels_vietnamese, autopct='%1.1f%%', startangle=140)
     plt.title('Số lượng học sinh có điểm trên 80 của từng môn học')
     plt.show()
 
