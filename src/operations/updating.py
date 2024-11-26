@@ -1,6 +1,6 @@
 from tkinter import Toplevel, Label, Entry, Button, StringVar, messagebox
 import pandas as pd
-
+#ssssssssss
 def update_data_by_id(data, file_path, root):
     """
     Cập nhật toàn bộ dữ liệu thuộc hàng có ID được chọn qua giao diện Tkinter.
@@ -13,6 +13,7 @@ def update_data_by_id(data, file_path, root):
     if id_column not in data.columns:
         messagebox.showerror("Lỗi", f"Cột '{id_column}' không tồn tại trong dữ liệu.")
         return
+
     column_headers_vietnamese = {
         "full_name": "Họ và Tên",
         "gender": "Giới tính",
@@ -24,8 +25,7 @@ def update_data_by_id(data, file_path, root):
         "chemistry_score": "Điểm Hóa học",
         "biology_score": "Điểm Sinh học",
         "english_score": "Điểm Tiếng Anh",
-        "geography_score": "Điểm Địa lý",
-        "average_score": "Điểm Trung bình",
+        "geography_score": "Điểm Địa lý"
     }
 
     # Tạo cửa sổ cập nhật
@@ -35,7 +35,7 @@ def update_data_by_id(data, file_path, root):
 
     # Biến lưu trữ ID và giá trị mới
     search_id_var = StringVar()
-    update_vars = {col: StringVar() for col in data.columns if col != id_column}
+    update_vars = {col: StringVar() for col in data.columns if col != id_column and col != "average_score"}
 
     def load_row():
         search_id = search_id_var.get()
@@ -59,47 +59,63 @@ def update_data_by_id(data, file_path, root):
             messagebox.showerror("Lỗi", "ID không hợp lệ. Vui lòng nhập đúng định dạng.")
 
     def save_changes():
-     search_id = search_id_var.get()
-     try:
-        # Kiểm tra kiểu ID
-        search_id_value = int(search_id) if data[id_column].dtype in ['int64', 'float64'] else search_id
-        row_index = data[data[id_column] == search_id_value].index[0]
+        search_id = search_id_var.get()
+        try:
+            # Kiểm tra kiểu ID
+            search_id_value = int(search_id) if data[id_column].dtype in ['int64', 'float64'] else search_id
+            row_index = data[data[id_column] == search_id_value].index[0]
 
-        # Cập nhật giá trị mới
-        for col, var in update_vars.items():
-            new_value = var.get()
-            if new_value:
-                try:
-                    # Chuyển kiểu dữ liệu nếu cần
-                    if pd.api.types.is_numeric_dtype(data[col]):
-                        new_value = float(new_value) if '.' in new_value else int(new_value)
+            # Cập nhật giá trị mới
+            for col, var in update_vars.items():
+                new_value = var.get()
+                if new_value:
+                    try:
+                        # Chuyển kiểu dữ liệu nếu cần
+                        if pd.api.types.is_numeric_dtype(data[col]):
+                            new_value = float(new_value) if '.' in new_value else int(new_value)
 
-                        # Kiểm tra giá trị điểm (áp dụng cho các cột có tên liên quan đến điểm)
-                        if "score" in col or "average" in col:
-                            if new_value < 0 or new_value > 100:
-                                messagebox.showwarning(
-                                    "Cảnh báo",
-                                    f"Điểm của cột '{label_text}' phải nằm trong khoảng từ 0 đến 100."
-                                )
-                                continue  # Bỏ qua cột này và giữ nguyên giá trị cũ
+                            # Kiểm tra giá trị điểm: Đảm bảo giá trị là số thực và không vượt quá 100
+                            if col.endswith('_score') or col == 'average_score':
+                                if not (0 <= new_value <= 100):
+                                    messagebox.showwarning(
+                                        "Cảnh báo",
+                                        f"Điểm của cột '{column_headers_vietnamese.get(col, col)}' phải nằm trong khoảng từ 0 đến 100."
+                                    )
+                                    return  # Dừng lại nếu điểm không hợp lệ
                         
-                    # Cập nhật dữ liệu
-                    data.at[row_index, col] = new_value
-                except ValueError:
-                    messagebox.showwarning(
-                        "Cảnh báo",
-                        f"Giá trị không hợp lệ cho cột '{label_text}'. Giữ nguyên giá trị cũ."
-                    )
-            
+                        # Kiểm tra giá trị "Công việc làm thêm" (True/False)
+                        if col == "part_time_job":
+                            if new_value.lower() == "true":
+                                new_value = True
+                            elif new_value.lower() == "false":
+                                new_value = False
+                            else:
+                                raise ValueError("Giá trị 'Công việc làm thêm' phải là 'true' hoặc 'false'")
 
-        # Lưu vào file CSV
-        data.to_csv(file_path, index=False)
-        messagebox.showinfo("Thành công", f"Dữ liệu đã được lưu vào '{file_path}'.")
-        update_window.destroy()
+                        # Cập nhật dữ liệu
+                        data.at[row_index, col] = new_value
+                    except ValueError as e:
+                        messagebox.showwarning(
+                            "Cảnh báo",
+                            f"Giá trị không hợp lệ cho cột '{column_headers_vietnamese.get(col, col)}'. Lý do: {str(e)}"
+                        )
+                        return  # Dừng lại và yêu cầu người dùng sửa lỗi
 
-     except Exception as e:
-        messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
+            # Tính lại Điểm Trung bình từ các cột điểm
+            score_columns = ['math_score', 'history_score', 'physics_score', 'chemistry_score', 
+                             'biology_score', 'english_score', 'geography_score']
+            scores = [data.at[row_index, col] for col in score_columns if pd.notna(data.at[row_index, col])]
+            if scores:
+                average_score = round(sum(scores) / len(scores), 2)  # Làm tròn đến 2 chữ số thập phân
+                data.at[row_index, 'average_score'] = average_score
 
+            # Lưu vào file CSV
+            data.to_csv(file_path, index=False)
+            messagebox.showinfo("Thành công", f"Dữ liệu đã được lưu vào '{file_path}'.")
+            update_window.destroy()
+
+        except Exception as e:
+            messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
 
     # Form nhập ID
     Label(update_window, text="Nhập ID để cập nhật:").pack(pady=5)
@@ -115,4 +131,3 @@ def update_data_by_id(data, file_path, root):
 
     # Nút lưu thay đổi
     Button(update_window, text="Lưu thay đổi", command=save_changes).pack(pady=20)
-
