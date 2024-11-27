@@ -2,17 +2,19 @@ import tkinter as tk
 from tkinter import ttk
 from matplotlib import pyplot as plt
 import pandas as pd
-
 def show_chart1(data):
+    import matplotlib.pyplot as plt
+    import pandas as pd
+
     # Chia điểm trung bình thành 5 phần hợp lý
     bins = [48, 60, 70, 80, 90, 100]  # Khoảng chia
     labels = ['48-60', '60-70', '70-80', '80-90', '90-100']  # Nhãn cho mỗi phần
-    data['Score Range'] = pd.cut(data['average_score'], bins=bins, labels=labels, right=False)
+    score_range = pd.cut(data['average_score'], bins=bins, labels=labels, right=False)
 
     # Đếm số lượng học sinh trong mỗi phần
-    score_distribution = data['Score Range'].value_counts(sort=False)
+    score_distribution = score_range.value_counts(sort=False)
 
-    # Vẽ biểu đồ cột (bar chart) 
+    # Vẽ biểu đồ cột (bar chart)
     plt.figure(figsize=(8, 6))
     plt.bar(score_distribution.index.astype(str), score_distribution.values, color='skyblue', edgecolor='purple')
 
@@ -26,7 +28,8 @@ def show_chart1(data):
     # Hiển thị biểu đồ
     plt.tight_layout()
     plt.show()
-def show_chart2(data):        
+
+def show_chart2(data): 
     all_subjects = ['math_score', 'history_score', 'physics_score', 
                     'chemistry_score', 'biology_score', 'english_score', 'geography_score']
     df_above_80 = data[data[all_subjects].gt(80).any(axis=1)] 
@@ -66,7 +69,7 @@ def show_chart3(data):
     plt.figure(figsize=(8, 8))
     plt.pie(students_above_80, labels=labels_vietnamese, autopct='%1.1f%%', startangle=140)
     plt.title('Số lượng học sinh có điểm trên 80 của từng môn học')
-    plt.show()1
+    plt.show()
 
 def show_chart4(data):
     # Phân loại sinh viên có điểm số trên 80 (cho các môn học)
