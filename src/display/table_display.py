@@ -35,7 +35,7 @@ def create_table_window(data, rows_per_page=50):
     """
     root = Toplevel()
     root.title("Hiển thị dữ liệu")
-    root.geometry("900x600")
+    root.geometry("1600x600")
 
     # Frame chứa bảng
     frame_table = Frame(root)
