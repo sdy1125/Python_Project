@@ -89,7 +89,7 @@ def add_new_data(file_path):
             if data.empty:
                 writer.writeheader() # Ghi header nếu file chưa có dữ liệu
             writer.writerow(new_record) # Ghi dòng dữ liệu mới
-        messagebox.showinfo("Thành công", "Đã thêm đối tượng mới vào file CSV.")
+        messagebox.showinfo("Thành công", f"Đã thêm đối tượng mới vào file CSV với ID {new_id}.")
         display_data_update(file_path)
     except Exception as e:
         messagebox.showerror("Lỗi", f"Có lỗi xảy ra: {e}")
