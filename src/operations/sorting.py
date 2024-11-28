@@ -10,16 +10,16 @@ def sort_data(data, rows_per_page, root):
         try:
             # Lấy lựa chọn từ người dùng
             column_choice = column_var.get()
-            if column_choice == "Weekly Study Hours":
+            if column_choice == "Giờ tự học/tuần":
                 column_name = "weekly_self_study_hours"
-            elif column_choice == "Average Score":
+            elif column_choice == "Điểm trung bình":
                 column_name = "average_score"
             else:
                 messagebox.showwarning("Cảnh báo", "Chọn tiêu chí sắp xếp hợp lệ.")
                 return
 
             # Xác định thứ tự sắp xếp (tăng/giảm)
-            ascending = sort_order_var.get() == "Ascending"
+            ascending = sort_order_var.get() == "Tăng dần"
 
             # Sắp xếp dữ liệu
             sorted_data = data.sort_values(by=column_name, ascending=ascending)
@@ -37,19 +37,19 @@ def sort_data(data, rows_per_page, root):
     sort_window.geometry("400x300")
 
     # Biến lưu trữ lựa chọn cột và thứ tự sắp xếp
-    column_var = StringVar(value="Weekly Study Hours")
-    sort_order_var = StringVar(value="Ascending")
+    column_var = StringVar(value="Giờ tự học/tuần")
+    sort_order_var = StringVar(value="Tăng dần")
 
     # Nhãn và combobox chọn tiêu chí sắp xếp
     Label(sort_window, text="Chọn tiêu chí sắp xếp:").pack(pady=5)
     column_menu = ttk.Combobox(sort_window, textvariable=column_var)
-    column_menu['values'] = ["Weekly Study Hours", "Average Score"]
+    column_menu['values'] = ["Giờ tự học/tuần", "Điểm trung bình"]
     column_menu.pack(pady=5)
 
     # Nhãn và combobox chọn thứ tự sắp xếp
     Label(sort_window, text="Chọn thứ tự sắp xếp:").pack(pady=5)
     order_menu = ttk.Combobox(sort_window, textvariable=sort_order_var)
-    order_menu['values'] = ["Ascending", "Descending"]
+    order_menu['values'] = ["Giảm dần", "Tăng dần"]
     order_menu.pack(pady=5)
 
     # Nút thực hiện sắp xếp

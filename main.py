@@ -16,7 +16,6 @@ data = pd.read_csv(file_path)
 rows_per_page = 50
 current_page =1
 
-
 def display_data_tk():
    data = pd.read_csv(file_path)
    create_table_window(data, rows_per_page=50)
@@ -54,12 +53,13 @@ def menu_plot_data():
 root = tk.Tk()
 root.title("Hệ thống quản lý dữ liệu")
 root.geometry("400x300")
+root.config(bg='black')
 
-tk.Button(root, text="Hiển thị danh sách dữ liệu", command=display_data_tk).pack(pady=10)
-tk.Button(root, text="Sắp xếp dữ liệu", command=menu_sort_data).pack(pady=10)
-tk.Button(root, text="Cập nhật dữ liệu", command=menu_update_data).pack(pady=10)
-tk.Button(root, text="Thêm/Xóa dữ liệu", command=menu_add_delete).pack(pady=10)
-tk.Button(root, text="Tìm kiếm dữ liệu", command=menu_search_data).pack(pady=10)
-tk.Button(root, text="Đồ thị trực quan", command=menu_plot_data).pack(pady=10)
+tk.Button(root, text="Hiển thị danh sách dữ liệu", command=display_data_tk, width=20).pack(pady=10)
+tk.Button(root, text="Sắp xếp dữ liệu", command=menu_sort_data, width=20).pack(pady=10)
+tk.Button(root, text="Cập nhật dữ liệu", command=menu_update_data, width=20).pack(pady=10)
+tk.Button(root, text="Thêm/Xóa dữ liệu", command=menu_add_delete, width=20).pack(pady=10)
+tk.Button(root, text="Tìm kiếm dữ liệu", command=menu_search_data, width=20).pack(pady=10)
+tk.Button(root, text="Đồ thị trực quan", command=menu_plot_data, width=20).pack(pady=10)
 
 root.mainloop()

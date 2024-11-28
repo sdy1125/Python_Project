@@ -35,7 +35,7 @@ def create_table_window(data, rows_per_page=50):
     """
     root = Toplevel()
     root.title("Hiển thị dữ liệu")
-    root.geometry("900x600")
+    root.geometry("1960x600")
 
     # Frame chứa bảng
     frame_table = Frame(root)
@@ -44,9 +44,28 @@ def create_table_window(data, rows_per_page=50):
     # Treeview hiển thị dữ liệu
     columns = ["STT"] + list(data.columns)
     treeview = ttk.Treeview(frame_table, columns=columns, show="headings", height=20)
+
+# Tạo từ điển ánh xạ tiêu đề cột sang tiếng Việt
+    column_headers_vietnamese = {
+     "STT": "STT",
+     "id": "Mã số",
+     "full_name": "Họ và Tên",
+     "gender": "Giới tính",
+     "part_time_job": "Công việc làm thêm",
+     "weekly_self_study_hours": "Giờ tự học/tuần",
+     "math_score": "Điểm Toán",
+     "history_score": "Điểm Lịch sử",
+     "physics_score": "Điểm Vật lý",
+     "chemistry_score": "Điểm Hóa học",
+     "biology_score": "Điểm Sinh học",
+     "english_score": "Điểm Tiếng Anh",
+     "geography_score": "Điểm Địa lý",
+     "average_score": "Điểm Trung bình"
+    }
+# Gán tiêu đề tiếng Việt vào cột
     for col in columns:
-        treeview.heading(col, text=col)
-        treeview.column(col, width=100, anchor="center")
+      treeview.heading(col, text=column_headers_vietnamese.get(col, col))  # Lấy tiêu đề tiếng Việt nếu có, nếu không giữ nguyên
+      treeview.column(col, width=100, anchor="center")
     treeview.pack(fill="both", expand=True)
 
     # Biến toàn cục cho trạng thái trang hiện tại
@@ -94,6 +113,6 @@ def create_table_window(data, rows_per_page=50):
     Button(frame_controls, text="Đầu trang", command=first_page).grid(row=0, column=2, padx=5)
     Button(frame_controls, text="Cuối trang", command=last_page).grid(row=0, column=3, padx=5)
     Button(frame_controls, text="Thay đổi số dòng mỗi trang", command=change_rows_per_page).grid(row=0, column=4, padx=5)
-
+    Button(frame_controls, text="Đóng cửa sổ", command=root.destroy).grid(row=0, column=5, padx=5)
     # Hiển thị trang đầu tiên
     display_table(data, current_page[0], rows_per_page, treeview, label_page)
