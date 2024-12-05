@@ -53,7 +53,6 @@ def menu_plot_data():
 root = tk.Tk()
 root.title("Hệ thống quản lý dữ liệu")
 root.geometry("400x300")
-root.config(bg='black')
 
 tk.Button(root, text="Hiển thị danh sách dữ liệu", command=display_data_tk, width=20).pack(pady=10)
 tk.Button(root, text="Sắp xếp dữ liệu", command=menu_sort_data, width=20).pack(pady=10)
