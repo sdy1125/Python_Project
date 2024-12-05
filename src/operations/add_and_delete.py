@@ -29,6 +29,10 @@ def add_new_data(file_path):
                 part_time_job = entry_part_time_job.get().strip().capitalize()
                 weekly_self_study_hours = float(entry_weekly_self_study_hours.get())
                 
+                # Kiwem tra tính hợp lệ của số giờ tự học
+                if weekly_self_study_hours < 0 or weekly_self_study_hours > 168:
+                    messagebox.showerror("Lỗi", "Giờ tự học phải thuộc khoảng 0 đến 168.")
+                    return
                 # Lấy điểm từ các môn học
                 subjects = ["Toán", "Lịch Sử", "Vật Lý", "Hóa Học", "Sinh Học", "Tiếng Anh", "Địa Lý"]
                 scores = {}
