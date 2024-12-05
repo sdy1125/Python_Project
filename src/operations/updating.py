@@ -1,12 +1,17 @@
 from tkinter import Toplevel, Label, Entry, Button, StringVar, messagebox, Frame
 import pandas as pd
-
+rows_per_page=50
 def update_data_by_id(data, file_path, root):
+    from src.display.table_display import create_table_window
     """
     Cập nhật toàn bộ dữ liệu thuộc hàng có ID được chọn qua giao diện Tkinter.
     :param data: DataFrame chứa dữ liệu
     :param file_path: Đường dẫn file CSV để lưu thay đổi
     :param root: Cửa sổ chính Tkinter
+    :param current_page: Trang hiện tại
+    :param rows_per_page: Số dòng mỗi trang
+    :param treeview: Widget Treeview hiển thị bảng dữ liệu
+    :param label_page: Nhãn hiển thị số trang
     """
     id_column = "id"  # Mặc định cột ID là "id"
 
@@ -31,7 +36,7 @@ def update_data_by_id(data, file_path, root):
     # Tạo cửa sổ cập nhật
     update_window = Toplevel(root)
     update_window.title("Cập nhật dữ liệu")
-    update_window.geometry("500x900")
+    update_window.geometry("300x900")
 
     # Biến lưu trữ ID và giá trị mới
     search_id_var = StringVar()
@@ -82,7 +87,22 @@ def update_data_by_id(data, file_path, root):
                                     f"Điểm của cột '{column_headers_vietnamese.get(col, col)}' phải nằm trong khoảng từ 0 đến 100."
                                 )
                                 return  # Dừng lại nếu điểm không hợp lệ
-                        
+                        if col == "weekly_self_study_hours":
+                            new_value = float(new_value) if '.' in new_value else int(new_value)
+                            if not (0 <= new_value <= 168):
+                                messagebox.showwarning(
+                                    "Cảnh báo",
+                                    f"Số giờ tự học phải nằm trong khoảng từ 0 đến 168."
+                                )
+                                return
+                        if col == "gender":
+                            if new_value.lower() not in ["male", "female"]:
+                                messagebox.showwarning(
+                                    "Cảnh báo",
+                                    f"Giá trị của cột '{column_headers_vietnamese.get(col, col)}' phải là 'male' hoặc 'female'."
+                                 )
+                                return
+                
                         # Kiểm tra giá trị "Công việc làm thêm" (True/False)
                         if col == "part_time_job":
                             if new_value.lower() not in ["true", "false"]:
@@ -115,8 +135,12 @@ def update_data_by_id(data, file_path, root):
             messagebox.showinfo("Thành công", f"Dữ liệu đã được lưu vào '{file_path}'.")
             update_window.destroy()
 
+            # Refresh table after saving changes
+            create_table_window(data, rows_per_page)
+
         except Exception as e:
             messagebox.showerror("Lỗi", f"Có lỗi xảy ra khi lưu dữ liệu: {e}")
+
 
     # Form nhập ID
     Label(update_window, text="Nhập ID để cập nhật:").pack(pady=5)

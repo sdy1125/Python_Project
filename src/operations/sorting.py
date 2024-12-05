@@ -14,6 +14,20 @@ def sort_data(data, rows_per_page, root):
                 column_name = "weekly_self_study_hours"
             elif column_choice == "Điểm trung bình":
                 column_name = "average_score"
+            elif column_choice == "Điểm toán":
+                column_name = "math_score"
+            elif column_choice == "Điểm lịch sử":
+                column_name = "history_score"
+            elif column_choice == "Điểm vật lý":
+                column_name = "physics_score"
+            elif column_choice == "Điểm hoá":
+                column_name = "chemistry_score"
+            elif column_choice == "Điểm sinh":
+                column_name = "biology_score"
+            elif column_choice == "Điểm anh văn":
+                column_name = "english_score"
+            elif column_choice == "Điểm địa lý":
+                column_name = "geography_score"
             else:
                 messagebox.showwarning("Cảnh báo", "Chọn tiêu chí sắp xếp hợp lệ.")
                 return
@@ -43,7 +57,8 @@ def sort_data(data, rows_per_page, root):
     # Nhãn và combobox chọn tiêu chí sắp xếp
     Label(sort_window, text="Chọn tiêu chí sắp xếp:").pack(pady=5)
     column_menu = ttk.Combobox(sort_window, textvariable=column_var)
-    column_menu['values'] = ["Giờ tự học/tuần", "Điểm trung bình"]
+    column_menu['values'] = ["Giờ tự học/tuần", "Điểm trung bình", "Điểm toán", "Điểm lịch sử", "Điểm vật lý", 
+                             "Điểm hoá", "Điểm sinh", "Điểm anh văn", "Điểm địa lý"]
     column_menu.pack(pady=5)
 
     # Nhãn và combobox chọn thứ tự sắp xếp
